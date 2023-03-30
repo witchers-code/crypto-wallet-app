@@ -19,7 +19,7 @@ export const BaseInput: Component<BaseInputProps> = (props) => {
           type={props.type}
           id={props.name}
           name={props.name}
-          class="w-full mb-2 h-10 rounded py-2 px-3 pr-10 bg-max-dark border border-input-borders text-sm text-input-color placeholder:input-color focus:outline-none focus:border-sky-500 invalid:border-pink-500 invalid:text-pink-600
+          class="w-full mb-2 h-10 rounded py-2 px-3 pr-10 bg-max-dark border border-input-borders text-sm text-white-font placeholder:text-input-color focus:outline-none focus:border-sky-500 invalid:border-pink-500 invalid:text-pink-600
     focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
           placeholder={props.placeholder}
         />
