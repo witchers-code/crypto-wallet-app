@@ -29,6 +29,7 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "lightweight-charts": "^4.0.1",
     "solid-js": "^1.6.10"
   }
 }

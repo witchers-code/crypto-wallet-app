@@ -1,6 +1,7 @@
 import { CoinListType } from "@/api/getCoinList";
 import { SelectButton } from "@/components/Buttons";
 import { CoinMenuContainer } from "@/components/CoinMenuContainer";
+import { useCoinSwitch } from "@/context/coinSwitch";
 import { Component, Show, createSignal, onCleanup, onMount } from "solid-js";
 
 type SelectCoinProps = {
@@ -10,7 +11,8 @@ type SelectCoinProps = {
 export const SelectCoinContainer: Component<SelectCoinProps> = (props) => {
   let ref: HTMLDivElement;
   const [isOpenMenu, setIsOpenMenu] = createSignal(false);
-  const [coin, setCoin] = createSignal<CoinListType>(props.options[0]);
+  // const [coin, setCoin] = createSignal<CoinListType>(props.options[0]);
+  const [coin, setCoin] = useCoinSwitch();
 
   const setWithdrawCoin = (ticker: string) => {
     const coin = props.options.filter((item) => item.ticker === ticker)[0];
