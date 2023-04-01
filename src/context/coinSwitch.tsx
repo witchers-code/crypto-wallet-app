@@ -8,6 +8,7 @@ import {
   Accessor,
   Setter,
 } from "solid-js";
+import { createStore } from "solid-js/store";
 
 const initialState = {
   name: "Bitcoin",
@@ -18,7 +19,8 @@ const initialState = {
 };
 
 export type CoinSwitchContextType = [
-  coin: Accessor<CoinListType>,
+  //   coin: Accessor<CoinListType>,
+  coin: CoinListType,
   setCoin: Setter<CoinListType>
 ];
 
@@ -29,7 +31,7 @@ type ProviderProps = {
 };
 
 export const CoinSwitchProvider = (props: ProviderProps) => {
-  const [coin, setCoin] = createSignal<CoinListType>(initialState);
+  const [coin, setCoin] = createStore<CoinListType>(initialState);
   //   const value: CoinSwitchContextType = [coin, setCoin];
   return (
     <CoinSwitchContext.Provider value={[coin, setCoin]}>

@@ -43,10 +43,10 @@ export const SelectCoinContainer: Component<SelectCoinProps> = (props) => {
       <div class="flex w-full relative">
         <SelectButton
           onClick={handleMenuClick}
-          icon={coin().icon}
-          title={coin().name}
-          span={`(${coin().ticker})`}
-          span2={`${coin().balance}`}
+          icon={coin.icon}
+          title={coin.name}
+          span={`(${coin.ticker})`}
+          span2={`${coin.balance}`}
         />
         <Show when={isOpenMenu()}>
           <div ref={ref!} class="absolute z-50 w-full">

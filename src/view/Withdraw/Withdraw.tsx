@@ -8,7 +8,7 @@ import { createEffect, createResource, createSignal } from "solid-js";
 
 export const Withdraw = () => {
   const [coin, setCoin] = useCoinSwitch();
-  const [coinData, { refetch }] = createResource(coin().apiName, fetchCoinData);
+  const [coinData, { refetch }] = createResource(coin.apiName, fetchCoinData);
   const [chartData, setChartata] = createSignal<(WhitespaceData | AreaData)[]>(
     []
   );
@@ -19,10 +19,11 @@ export const Withdraw = () => {
     }
     // console.log("formattedData", formattedData);
     // console.log("Withdraw view", coin(), coinData().prices);
-  }, [coin()]);
+    console.log("WithdrawView", coin);
+  }, [coin]);
 
   return (
-    <div class="flex mt-20 mx-auto max-width:2xl">
+    <div class="flex relative mt-20 mx-auto 2xl:w-[1280]">
       <div class="flex lg:w-1/4 md:w-1/2 w-full">
         <WithdrawForm />
       </div>

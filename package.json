@@ -29,7 +29,10 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@storybook/html": "^6.5.16",
+    "@storybook/web-components": "^6.5.16",
     "lightweight-charts": "^4.0.1",
-    "solid-js": "^1.6.10"
+    "solid-js": "^1.6.10",
+    "zod": "^3.21.4"
   }
 }

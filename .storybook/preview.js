@@ -1,13 +1,3 @@
-// export const parameters = {
-//   actions: { argTypesRegex: "^on[A-Z].*" },
-//   controls: {
-//     matchers: {
-//       color: /(background|color)$/i,
-//       date: /Date$/,
-//     },
-//   },
-// }
-
 /* @refresh reload */
 /**
  * Don't forget the line above for HMR!
@@ -16,6 +6,9 @@
  * however reloading the page fixes this issue
  */
 
+// import { configure } from "solid-js/dom";
+// import { setConsoleOptions } from "@storybook/addon-console";
+//
 import { render } from "solid-js/web";
 
 let disposeStory;
@@ -42,3 +35,10 @@ export const parameters = {
     },
   },
 };
+
+// setConsoleOptions({
+//   panelExclude: [],
+// });
+
+// // automatically import all files ending in *.stories.js/ts/tsx
+// configure(require.context("../src", true, /\.stories\.(js|ts|tsx)$/), module);
