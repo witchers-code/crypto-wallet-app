@@ -4,7 +4,7 @@ import { Withdraw } from "./view/Withdraw/Withdraw";
 
 const App: Component = () => {
   return (
-    <div class="h-screen bg-dark-bg p-5">
+    <div class="p-5 max-w-[1536px] mx-auto">
       <img src="/logo/logo-nightly.svg" />
       <CoinSwitchProvider>
         <Withdraw />

@@ -7,7 +7,7 @@ type LimitInfoProps = {
 
 export const LimitInfo: Component<LimitInfoProps> = (props) => {
   return (
-    <div>
+    <div class="flex flex-col">
       <p class="inline-block text-xs text-label-font my-2">{props.label}</p>
       <p class="inline-block text-base text-white-font">{props.limit}</p>
     </div>
