@@ -1,143 +1,31 @@
-import { Component, createEffect, createSignal, JSX } from "solid-js";
-import { CoinListType, getCoinList } from "@/api/getCoinList";
+import { Component } from "solid-js";
+import { getCoinList } from "@/api/getCoinList";
 import { BaseCard } from "@/components/Cards";
-import { AddressInput, AmountInput } from "@/components/Inputs";
+import { AddressInput, AmountInput, ErrorMessage } from "@/components/Inputs";
 import { LimitInfo } from "@/components/Info";
 import { Button } from "@/components/Buttons";
 import { SelectCoinContainer } from "@/components/SelectCoinContainer";
-import { useCoinSwitch } from "@/context/coinSwitch";
-import { z } from "zod";
-import { getRandomMinMax } from "@/utils";
 
-interface InputDataType {
-  coin: CoinListType;
-  address: string;
-  amount: number | string;
-}
+import { useWithdrawForm } from "../hooks/useWithdrawForm";
 
 export const WithdrawForm: Component = () => {
-  const [coin, setCoin] = useCoinSwitch();
-  const [limits, setLimits] = createSignal({
-    networkFee: Number(getRandomMinMax(0.000001, 0.000008).toFixed(6)),
-    minAmount: Number(getRandomMinMax(0.00005, 0.0001).toFixed(6)),
-    maxAmount: Number(getRandomMinMax(9.5, 15.5).toFixed(6)),
-  });
+  const {
+    coin,
+    inputData,
+    limits,
+    isValid,
 
-  const [inputData, setInputData] = createSignal<InputDataType>({
-    coin: coin,
-    address: "",
-    amount: "",
-  });
+    addressInputErrors,
+    amountInputErrors,
+    emptyInputsError,
 
-  const [isValid, setIsValid] = createSignal({
-    address: true,
-    amount: true,
-  });
+    handleAddressValidation,
+    handleAmountValidation,
 
-  const [addressInputErrors, setAddressInputErrors] = createSignal<string[]>(
-    []
-  );
-  const [amountInputErrors, setAmountInputErrors] = createSignal<string[]>([]);
-  const [emptyInputsError, setEmptyInputsError] = createSignal(false);
-
-  const parseValidAddress = z
-    .string()
-    .length(32, "Address should have length 32 symbols")
-    .startsWith("0x")
-    .regex(
-      /^(?=.*[A-Z])(?=.*[!@#$%^&*()])(?=.*[0-9]).+$/,
-      "Address should contain at least one uppercase letter, one special character, and one number"
-    );
-
-  const parseValidAmount = z
-    .number()
-    .positive("Amount can't be 0")
-    .min(
-      limits().minAmount,
-      `Amount must be great than or equal to ${limits().minAmount}`
-    )
-    .max(
-      limits().maxAmount,
-      `Amount must be less than or equal to ${limits().maxAmount}`
-    );
-
-  const handleChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (
-    event
-  ) => {
-    setEmptyInputsError(false);
-    let value;
-    if (event.currentTarget.type === "number")
-      value = +event.currentTarget.value;
-    else value = event.currentTarget.value;
-
-    setInputData({
-      ...inputData(),
-      [event.currentTarget.name]: value,
-    });
-
-    if (!isValid().address) {
-      handleAddressValidation();
-    }
-    if (!isValid().amount) {
-      handleAmountValidation();
-    }
-  };
-
-  const handleAddressValidation = () => {
-    const validAddress = parseValidAddress.safeParse(inputData().address);
-    // const parseResult = formSchema.safeParse(inputData());
-
-    if (!validAddress.success) {
-      setIsValid({ ...isValid(), address: false });
-      setAddressInputErrors(validAddress.error.format()._errors);
-    } else {
-      setAddressInputErrors([]);
-      setIsValid({ ...isValid(), address: true });
-      // validAddress.data;
-    }
-  };
-
-  const handleAmountValidation = () => {
-    const validAmount = parseValidAmount.safeParse(inputData().amount);
-    // const parseResult = formSchema.safeParse(inputData());
-
-    if (!validAmount.success) {
-      setIsValid({ ...isValid(), amount: false });
-      setAmountInputErrors(validAmount.error.format()._errors);
-    } else {
-      setAmountInputErrors([]);
-      setIsValid({ ...isValid(), amount: true });
-      // validAddress.data;
-    }
-  };
-  const handleMaxBtn = () => {
-    // setInputData((current) => {
-    //   current.amount = maxAmount;
-    //   return current;
-    // });
-
-    setInputData({ ...inputData(), amount: Number(limits().maxAmount) });
-  };
-
-  const handleSubmit = () => {
-    if (
-      inputData().address.trim() === "" ||
-      String(inputData().amount).trim() === ""
-    ) {
-      setEmptyInputsError(true);
-    } else {
-      setEmptyInputsError(false);
-      alert(
-        "Withdraw successful!" +
-          "\n Coin: " +
-          inputData().coin.name +
-          "\n Address:" +
-          inputData().address +
-          "\n Amount:" +
-          `${Number(inputData().amount) - limits().networkFee}`
-      );
-    }
-  };
+    handleChange,
+    handleMaxBtn,
+    handleSubmit,
+  } = useWithdrawForm();
 
   return (
     <BaseCard>
@@ -149,13 +37,7 @@ export const WithdrawForm: Component = () => {
         valid={isValid().address}
         onBlur={handleAddressValidation}
       />
-      {addressInputErrors().length > 0
-        ? addressInputErrors().map((error, index) => (
-            <p class="text-xs text-pink-600">
-              {index + 1}. {error}
-            </p>
-          ))
-        : null}
+      <ErrorMessage errors={addressInputErrors()} />
       <AmountInput
         value={Number(inputData().amount) > 0 ? Number(inputData().amount) : ""}
         onChange={handleChange}
@@ -163,13 +45,7 @@ export const WithdrawForm: Component = () => {
         onBlur={handleAmountValidation}
         maxOnClick={handleMaxBtn}
       />
-      {amountInputErrors().length > 0
-        ? amountInputErrors().map((error, index) => (
-            <p class="text-xs text-pink-600">
-              {index + 1}. {error}
-            </p>
-          ))
-        : null}
+      <ErrorMessage errors={amountInputErrors()} />
       <hr class="border-color-borders my-2" />
       <div class="w-full  grid  grid-cols-2 justify-between gap-x-4 gap-y-2 mb-2">
         <LimitInfo
@@ -187,11 +63,13 @@ export const WithdrawForm: Component = () => {
           }`}
         />
       </div>
-      {emptyInputsError() ? (
-        <p class="text-xs text-pink-600">
-          Empty Input. Please fill all input fields
-        </p>
-      ) : null}
+      <ErrorMessage
+        errors={
+          emptyInputsError()
+            ? ["Empty Input. Please fill all input fields"]
+            : []
+        }
+      />
       <Button
         title="Withdraw"
         onClick={handleSubmit}
