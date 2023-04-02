@@ -80,7 +80,9 @@ export const useWithdrawForm = () => {
           "\n Address:" +
           inputData().address +
           "\n Amount:" +
-          `${Number(inputData().amount) - limits().networkFee}`
+          `${Number(inputData().amount) - limits().networkFee}` +
+          "\n Fee:" +
+          `${limits().networkFee}`
       );
     }
   };
