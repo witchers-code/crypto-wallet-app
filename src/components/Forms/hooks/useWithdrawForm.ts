@@ -63,6 +63,7 @@ export const useWithdrawForm = () => {
 
   const handleMaxBtn = () => {
     setInputData({ ...inputData(), amount: Number(limits().maxAmount) });
+    handleAmountValidation();
   };
 
   const handleSubmit = () => {
