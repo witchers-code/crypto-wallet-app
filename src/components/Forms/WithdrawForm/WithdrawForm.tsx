@@ -16,13 +16,30 @@ export const WithdrawForm: Component = () => {
     amount: 0,
   });
 
-  const formSchema = z.object({
-    address: z
-      .string()
-      .length(3, "Address should have length 32 symbols ")
-      .startsWith("0x"),
-    amount: z.number(),
-  });
+  // const [isValid, setIsValid] = createSignal(
+  //   {
+  //     address: true,
+  //     amount: true,
+  //   },
+  //   { equals: false }
+  // );
+  const [isAddressValid, setIsAddressValid] = createSignal(true);
+
+  const [addressInputErrors, setAddressInputErrors] = createSignal<string[]>(
+    []
+  );
+
+  const parseValidAddress = z
+    .string()
+    // .length(3, "Address should have length 32 symbols ")
+    .startsWith("0x");
+  // const formSchema = z.object({
+  //   address: z
+  //     .string()
+  //     .length(3, "Address should have length 32 symbols ")
+  //     .startsWith("0x"),
+  //   amount: z.number().min(10),
+  // });
 
   const handleChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (
     event
@@ -37,27 +54,49 @@ export const WithdrawForm: Component = () => {
       [event.currentTarget.name]: value,
     });
 
-    const parseResult = formSchema.safeParse(inputData());
+    const validAddress = parseValidAddress.safeParse(inputData().address);
+    // const parseResult = formSchema.safeParse(inputData());
 
-    if (!parseResult.success) {
-      // handle error then return
-      parseResult.error;
+    if (!validAddress.success) {
+      setIsAddressValid(false);
+      // setIsValid((current) => {
+      //   current.address = false;
+      //   return current;
+      // });
+      setAddressInputErrors(validAddress.error.format()._errors);
     } else {
-      // do something
-      parseResult.data;
+      setIsAddressValid(true);
+      // setIsValid({ ...isValid(), address: true });
+      // validAddress.data;
     }
   };
 
-  createEffect(() => {
-    console.log("coin switch", coin);
-  }, [coin, inputData()]);
+  // createEffect(() => {
+  //   console.log("coin switch", coin);
+  // }, [coin, inputData()]);
 
   return (
     <BaseCard>
       <h2 class="text-base text-white-font mb-3">Withdraw crypto</h2>
       <SelectCoinContainer options={getCoinList} />
-      <AddressInput value={inputData().address} onChange={handleChange} />
-      <AmountInput value={inputData().amount} onChange={handleChange} />
+      <AddressInput
+        value={inputData().address}
+        onChange={handleChange}
+        valid={isAddressValid()}
+      />
+      {addressInputErrors().length > 0
+        ? addressInputErrors().map((error, index) => (
+            <p class="text-xs text-pink-600">
+              {index + 1}. {error}
+            </p>
+          ))
+        : null}
+      {/*  */}
+      <AmountInput
+        value={inputData().amount}
+        onChange={handleChange}
+        valid={true}
+      />
 
       <hr class="border-color-borders my-2" />
       <div class="w-full grid grid-cols-2 justify-between gap-x-8 gap-y-2 mb-2">

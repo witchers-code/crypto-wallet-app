@@ -31,8 +31,8 @@ type ProviderProps = {
 };
 
 export const CoinSwitchProvider = (props: ProviderProps) => {
-  const [coin, setCoin] = createStore<CoinListType>(initialState);
-  //   const value: CoinSwitchContextType = [coin, setCoin];
+  const [coin, setCoin] = createStore(initialState);
+
   return (
     <CoinSwitchContext.Provider value={[coin, setCoin]}>
       {props.children}

@@ -26,14 +26,14 @@ export const getCoinList: CoinListType[] = [
   {
     name: "USD Coin",
     ticker: "USDC",
-    apiName: "usdc",
+    apiName: "usd-coin",
     icon: getIconByTicker("USDC"),
     balance: 1045.55,
   },
   {
     name: "TerherUS",
     ticker: "USDT",
-    apiName: "usdt",
+    apiName: "tether",
     icon: getIconByTicker("USDT"),
     balance: 445.55,
   },

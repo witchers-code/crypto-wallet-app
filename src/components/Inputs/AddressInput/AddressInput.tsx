@@ -1,9 +1,11 @@
 import { BaseInput } from "@/components/Inputs";
-import { Component, JSX } from "solid-js";
+import { Accessor, Component, JSX } from "solid-js";
 
 type AddressInputProps = {
   value: string;
   onChange: JSX.EventHandler<HTMLInputElement, InputEvent>;
+  valid: boolean;
+  //   valid: Accessor<boolean>;
 };
 
 export const AddressInput: Component<AddressInputProps> = (props) => {
@@ -15,6 +17,7 @@ export const AddressInput: Component<AddressInputProps> = (props) => {
       placeholder="kjJs8nUJ9ayJnisday89asdwq2ra..."
       value={props.value}
       onChange={props.onChange}
+      valid={props.valid}
     >
       <div class="absolute text-white right-2.5 bottom-[16px] p-[5px] rounded-full bg-primary-color-o25">
         <img src="/icons/ui/address_icon.svg" />
