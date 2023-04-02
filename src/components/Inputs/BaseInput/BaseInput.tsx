@@ -1,23 +1,28 @@
-import { JSX, Component } from "solid-js";
+import { JSX, Component, createEffect, createSignal } from "solid-js";
 
 type BaseInputProps = {
   name: string;
   label: string;
   placeholder: string;
   type: "text" | "number";
-  value: string | number;
+  value: string | number | "";
   onChange: JSX.EventHandler<HTMLInputElement, InputEvent>;
   children?: JSX.Element;
   valid: boolean;
-  // valid: Accessor<boolean>;
+  onBlur: any;
 };
 
 export const BaseInput: Component<BaseInputProps> = (props) => {
-  const invalidClass = props.valid
-    ? ""
-    : "border-pink-500 ring-pink-500 text-pink-600 focus:border-pink-500 focus:text-pink-600";
+  const [invalidClass, setInvalidClass] = createSignal("");
 
-  console.log("BaseInput", props.valid);
+  createEffect(() => {
+    props.valid
+      ? setInvalidClass("")
+      : setInvalidClass(
+          "border-pink-500 ring-pink-500 text-pink-600 focus:border-pink-500 focus:text-pink-600"
+        );
+  }, props.valid);
+
   return (
     <>
       <label for={props.name} class="text-xs text-label-font my-2">
@@ -35,6 +40,7 @@ export const BaseInput: Component<BaseInputProps> = (props) => {
           placeholder={props.placeholder}
           value={props.value}
           onInput={props.onChange}
+          onBlur={props.onBlur}
         />
         {props.children}
       </div>
